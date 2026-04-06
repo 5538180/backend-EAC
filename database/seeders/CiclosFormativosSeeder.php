@@ -53,12 +53,16 @@ class CiclosFormativosSeeder extends Seeder
 
             $codFamilia =  trim($rec['familia']);
 
+            
             // ? si no existe la familia profesional salta a la siguiente iteracion
             $idFamilia =  FamiliaProfesional::where('codigo', $codFamilia)->value('id');
-            if(is_null($idFamilia)){
+
+
+            // - Controlo de si existe la familia en la BBDD
+            /* if(is_null($idFamilia)){
                 continue;
             } 
-            
+             */
 
             /*    try {
                    $data[] = [
