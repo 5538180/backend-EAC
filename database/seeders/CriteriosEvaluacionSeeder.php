@@ -30,7 +30,6 @@ class CriteriosEvaluacionSeeder extends Seeder
         // ? El primer registro es la cabecera
         $header = array_map('trim', array_shift($rows));
 
-
         // ? Declaracion del array de datos
         $data = [];
 
@@ -40,7 +39,7 @@ class CriteriosEvaluacionSeeder extends Seeder
 
             // ? Si hay menos datos en las filas que datos en  columnas salta a la sigioente fila y no rellena
             // Ignorar filas vacías o mal formadas
-            // ! Cambiado a si es menor 
+            // ! Cambiado a si es mayor
             if (count($row) > count($header)) {
                 continue;
             }
@@ -50,21 +49,31 @@ class CriteriosEvaluacionSeeder extends Seeder
             // ! tiene value erro para contener si no coincide las keys, mejor usar try catch ValueError?
             $rec = array_combine($header, $row);
 
+            // ? Recompongo el dato de cod_ra de csv conforme a la bbdd
+            $codResultadoAprendizaje= 'RA' .trim($rec['id_ra']);
+ 
+            // 
             $codModulo =  trim($rec['cod_modulo']);
+            $idModulo =  Modulo::where('codigo', $codModulo)->value('id');
 
             // ? si no existe la familia profesional salta a la siguiente iteracion
-            $idModulo =  ResultadoAprendizaje::where('codigo', $codModulo)->value('id');
-            if (is_null($idModulo)) {
+            $idResultadoAprendizaje =(int) ResultadoAprendizaje::
+            where('codigo', $codResultadoAprendizaje)
+            ->where('modulo_id',$idModulo)
+            ->value('id');
+            
+
+            // - Comprobacion si existe el id de modulo o volvio nulo
+          /*   if (is_null($idModulo)) {
                 continue;
-            }
+            } */
 
             // ! TIPO en el csv ?????
 
             $data[] = [
-                // ! id ????
-                'id' => (int)$rec['id_ra'],
-                'resultado_aprendizaje_id' =>  $idModulo,
-                'codigo' => trim($rec['cod_modulo'] ?? ''),
+        
+                'resultado_aprendizaje_id' =>  $idResultadoAprendizaje,
+                'codigo' => 'CE'. $idResultadoAprendizaje.  trim($rec['id_criterio'] ?? ''), // ! id_criterio = cod_criterio // Ej: "CE1a", "CE1b"
                 'descripcion' => $rec['definicion'] ?? '',
 
                 'created_at' => now(),
@@ -77,9 +86,9 @@ class CriteriosEvaluacionSeeder extends Seeder
         // Insertar/actualizar usando upsert para evitar duplicados por 'codigo'
         DB::transaction(function () use ($data) {
             foreach (array_chunk($data, 200) as $chunk) {
-                DB::table('ciclos_formativos')->upsert(
+                DB::table('ciclos_evaluacion')->upsert(
                     $chunk,
-                    ['codigo','id','modulo_id'], // ! estos ???
+                    ['codigo','resultado_aprendizaje_id'], 
                     ['descripcion', 'updated_at']
                 );
             }
