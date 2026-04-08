@@ -121,7 +121,7 @@ public function run(): void
 
     // 4. Trazabilidad curricular: qué CE cubre cada SC
     DB::table('sc_criterios_evaluacion')->truncate(); // Limpiar trazabilidades anteriores para evitar duplicados
-    $sc01->criteriosEvaluacion()->attach([
+$sc01->criteriosEvaluacion()->attach([    
         $ce1a->id => ['peso_en_sc' => 30],
         $ce1b->id => ['peso_en_sc' => 40],
         $ce1c->id => ['peso_en_sc' => 30],
