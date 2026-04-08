@@ -7,10 +7,11 @@ use App\Models\Modulo;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 use function PHPUnit\Framework\isEmpty;
 
-class ModulosSeeder extends Seeder
+class ModulosFormativosSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,6 +19,8 @@ class ModulosSeeder extends Seeder
 
     public function run(): void
     {
+
+ Schema::disableForeignKeyConstraints();   
         // ? Donde se optienen los datos
         $path = database_path('seeders/csv/modulos.csv');
         //$pathPivot = database_path('seeders/csv/ciclo_modulos_relaciones.csv');
@@ -169,7 +172,9 @@ class ModulosSeeder extends Seeder
             $idCicloFormativo =  CicloFormativo::where('codigo', $codCiclo)->value('id');
 
             // ? COn ese id de ciclo formativo actualozo la BBDD anadiendo ese id de ciclo que coincida con el codigo de modulo del array (csv pivot)
-            Modulo::where('codigo', $codModulo)->update(['cicloformativo_id' => $idCicloFormativo]);
+            Modulo::where('codigo', $codModulo)->update(['ciclo_formativo_id' => $idCicloFormativo]);
         }
+
+        Schema::enableForeignKeyConstraints();
     }
 }

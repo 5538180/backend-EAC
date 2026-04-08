@@ -40,15 +40,33 @@ class SituacionCompetencia extends Model
         return $this->hasMany(NodoRequisito::class);
 }
 
+ // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
     public function prerequisitos() : BelongsToMany{
-        return $this->belongsToMany(SituacionCompetencia::class);
-    }
-    public function dependientes() : BelongsToMany{
-        return $this->belongsToMany(SituacionCompetencia::class);
+        return $this->belongsToMany(
+            SituacionCompetencia::class,
+            'sc_precedencia',
+            'sc_id',
+            'sc_requisito_id'
+        );
     }
 
-      public function criterioEvaluacion(): BelongsToMany{
-        return $this->belongsToMany(CriterioEvaluacion::class);
+    // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
+    public function dependientes() : BelongsToMany{
+        return $this->belongsToMany(
+            SituacionCompetencia::class,
+            'sc_precedencia',
+            'sc_requisito_id',
+            'sc_id'
+        );
+    }
+ // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
+      public function criteriosEvaluacion(): BelongsToMany{
+        return $this->belongsToMany(
+            CriterioEvaluacion::class,
+            'sc_criterios_evaluacion',
+            'situacion_competencia_id',
+            'criterio_evaluacion_id'
+        )->withPivot('peso_en_sc');
 }
         public function perfilesHabilitacion(): BelongsToMany{
         return $this->belongsToMany(PerfilHabilitacion::class);
