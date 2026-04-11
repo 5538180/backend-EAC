@@ -50,12 +50,15 @@ class User extends Authenticatable
     }
 
     // - RELACIONES
-    public function roles(): BelongsToMany
+    public function userRoles(): BelongsToMany
 {
     return $this->belongsToMany(Role::class, 'user_roles')
                 ->withPivot('ecosistema_laboral_id')
                 ->withTimestamps();
 }
+
+
+
 
 // Ecosistemas en los que está matriculado (como estudiante)
 public function matriculas(): HasMany
@@ -83,5 +86,14 @@ public function perfilEn(EcosistemaLaboral $ecosistema): ?PerfilHabilitacion
     return $this->perfilesHabilitacion()
                 ->where('ecosistema_laboral_id', $ecosistema->id)
                 ->first();
+}
+
+// app/Models/User.php  (añadir)
+
+// Método helper que consulta la relación roles y devuelve true/false
+public function hasRole(string $role): bool
+{
+    // Se usa la relación 'roles' definida en el modelo User
+    return $this->userRoles()->where('name', $role)->exists();
 }
 }

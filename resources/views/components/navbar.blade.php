@@ -16,7 +16,8 @@
                           {{ request()->routeIs('publico.modulos*') ? 'text-white font-semibold' : '' }}">
                     Catálogo
                 </a>
-                @auth
+                
+                @auth 
                     @role('estudiante')
                         <a href="{{ route('estudiante.dashboard') }}"
                            class="text-gray-300 hover:text-white text-sm transition-colors
