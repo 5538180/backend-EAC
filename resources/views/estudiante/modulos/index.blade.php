@@ -1,73 +1,93 @@
-{{-- resources/views/publico/modulos/index.blade.php --}}
+{{-- resources/views/publico/modulos/show.blade.php --}}
 @extends('layouts.eac')
-@section('title', 'Catálogo de módulos')
+
+@section('title', $modulo->nombre)
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-10">
+<div class="max-w-5xl mx-auto px-4 py-10">
 
-    <div class="flex items-center justify-between mb-8">
+    <div class="mb-6">
+        <a href="{{ route('publico.modulos.index') }}"
+           class="text-sm text-gray-400 hover:text-vfds-primary">← Catálogo</a>
+    </div>
+
+    <div class="card mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-vfds-primary">Catálogo de módulos</h1>
+            <span class="font-mono text-vfds-secondary text-sm font-semibold">
+                {{ $modulo->codigo }}
+            </span>
+            <h1 class="text-2xl font-bold text-vfds-primary mt-1">{{ $modulo->nombre }}</h1>
             <p class="text-gray-500 text-sm mt-1">
-                Módulos formativos con ecosistema de aprendizaje competencial disponible.
+                {{ $modulo->cicloFormativo->familiaProfesional->nombre }}
+                · {{ $modulo->cicloFormativo->nombre }}
+                ({{ ucfirst($modulo->cicloFormativo->grado) }})
+                · {{ $modulo->horas_totales }} horas
             </p>
+            @if($modulo->descripcion)
+                <p class="text-gray-600 mt-3 text-sm leading-relaxed">
+                    {{ $modulo->descripcion }}
+                </p>
+            @endif
         </div>
-        <form method="GET" action="{{ route('publico.modulos.index') }}"
-              class="flex items-center gap-2">
-            <select name="familia" onchange="this.form.submit()"
-                    class="text-sm border border-gray-300 rounded-lg px-3 py-2
-                           focus:ring-vfds-accent focus:border-vfds-accent">
-                <option value="">Todas las familias</option>
-                @foreach($familias as $familia)
-                    <option value="{{ $familia->id }}"
-                            {{ request('familia') == $familia->id ? 'selected' : '' }}>
-                        {{ $familia->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
     </div>
 
-    <div class="space-y-4">
-        @forelse($modulos as $modulo)
-            <div class="card flex items-center justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3">
-                        <span class="font-mono text-sm text-vfds-secondary font-semibold">
-                            {{ $modulo->codigo }}
+    {{-- Resultados de Aprendizaje (del módulo, no del ecosistema) --}}
+    <section class="mb-8">
+        <h2 class="text-lg font-bold text-vfds-primary mb-4">Resultados de Aprendizaje</h2>
+        <div class="space-y-4">
+            @foreach($modulo->resultadosAprendizaje->sortBy('orden') as $ra)
+                <div class="card">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-sm font-bold text-vfds-accent">
+                            {{ $ra->codigo }}
                         </span>
-                        <span class="text-base font-semibold text-gray-800">
-                            {{ $modulo->nombre }}
+                        <span class="text-sm font-semibold text-gray-700">
+                            {{ $ra->descripcion }}
+                        </span>
+                        <span class="ml-auto text-xs text-gray-400">
+                            {{ $ra->peso_porcentaje }}%
                         </span>
                     </div>
-                    <p class="text-sm text-gray-500 mt-1">
-                        {{ $modulo->cicloFormativo->familiaProfesional->nombre }}
-                        · {{ $modulo->cicloFormativo->nombre }}
-                        · {{ $modulo->horas_totales }}h
-                    </p>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        @foreach($modulo->ecosistemasLaborales->where('activo', true) as $eco)
-                            <a href="{{ route('publico.ecosistemas.show', $eco) }}"
-                               class="text-xs px-2 py-1 rounded-full bg-vfds-surface
-                                      text-vfds-primary hover:bg-vfds-secondary hover:text-white
-                                      transition-colors border border-vfds-primary/20">
-                                {{ $eco->codigo }}
-                            </a>
+                    <ul class="mt-2 space-y-1 pl-4 border-l-2 border-vfds-surface">
+                        @foreach($ra->criteriosEvaluacion->sortBy('orden') as $ce)
+                            <li class="text-xs text-gray-600">
+                                <span class="font-mono text-vfds-secondary font-semibold">
+                                    {{ $ce->codigo }}
+                                </span>
+                                · {{ $ce->descripcion }}
+                            </li>
                         @endforeach
-                    </div>
+                    </ul>
                 </div>
-                <a href="{{ route('publico.modulos.show', $modulo) }}"
-                   class="btn-secondary ml-4 shrink-0">
-                    Ver ficha
-                </a>
-            </div>
-        @empty
-            <p class="text-center text-gray-400 py-12">
-                No hay módulos disponibles para los criterios seleccionados.
-            </p>
-        @endforelse
-    </div>
+            @endforeach
+        </div>
+    </section>
 
-    <div class="mt-6">{{ $modulos->withQueryString()->links() }}</div>
+    {{-- Ecosistemas activos del módulo --}}
+    <section>
+        <h2 class="text-lg font-bold text-vfds-primary mb-4">
+            Ecosistemas de aprendizaje disponibles
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            @foreach($modulo->ecosistemasLaborales->where('activo', true) as $eco)
+                <a href="{{ route('publico.ecosistemas.show', $eco) }}"
+                   class="card hover:shadow-md transition-shadow group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-sm text-vfds-secondary font-semibold">
+                            {{ $eco->codigo }}
+                        </span>
+                        <span class="text-xs text-green-600 font-semibold">Activo</span>
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 group-hover:text-vfds-primary">
+                        {{ $eco->nombre }}
+                    </p>
+                    <p class="text-xs text-gray-400 mt-2">
+                        {{ $eco->situacionesCompetencia->count() }} situaciones de competencia
+                    </p>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
 </div>
 @endsection
