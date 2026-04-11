@@ -4,41 +4,40 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
 
-/* * Pivot Perfil ↔ Situación Conquistada
-* Esta es la tabla que registra qué SCs ha conquistado un estudiante y con qué Gradiente de Autonomía. */
+    /* * Pivot Perfil ↔ Situación Conquistada
+     * Esta es la tabla que registra qué SCs ha conquistado un estudiante y con qué Gradiente de Autonomía. */
 
     public function up(): void
     {
         Schema::create('perfil_situacion', function (Blueprint $table) {
-              $table->foreignId('perfil_habilitacion_id')
-              ->constrained('perfiles_habilitacion')
-              ->cascadeOnDelete();
-        $table->foreignId('situacion_competencia_id')
-              ->constrained('situaciones_competencia')
-              ->cascadeOnDelete();
+            $table->foreignId('perfil_habilitacion_id')
+                ->constrained('perfiles_habilitacion')
+                ->cascadeOnDelete();
+            $table->foreignId('situacion_competencia_id')
+                ->constrained('situaciones_competencia')
+                ->cascadeOnDelete();
 
-        // Gradiente de Autonomía alcanzado
-        $table->enum('gradiente_autonomia', [
-            'asistido',
-            'guiado',
-            'supervisado',
-            'autonomo',
-        ]);
+            // Gradiente de Autonomía alcanzado
+            $table->enum('gradiente_autonomia', [
+                'asistido',
+                'guiado',
+                'supervisado',
+                'autonomo',
+            ]);
 
-        // Puntuación que obtuvo en la evaluación que conquistó la SC
-        $table->decimal('puntuacion_conquista', 5, 2)->nullable();
+            // Puntuación que obtuvo en la evaluación que conquistó la SC
+            $table->decimal('puntuacion_conquista', 5, 2)->nullable();
 
-        // Número de intentos hasta conquistar la SC
-        $table->unsignedSmallInteger('intentos')->default(1);
+            // Número de intentos hasta conquistar la SC
+            $table->unsignedSmallInteger('intentos')->default(1);
 
-        $table->primary(['perfil_habilitacion_id', 'situacion_competencia_id']);
-            $table->timestamps();
+            $table->primary(['perfil_habilitacion_id', 'situacion_competencia_id']);
+            $table->timestamp('fecha_conquista')->useCurrent();
         });
     }
 

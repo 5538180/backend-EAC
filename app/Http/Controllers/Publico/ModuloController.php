@@ -39,5 +39,8 @@ class ModuloController
         ]);
 
         return view('publico.modulos.show', compact('modulo'));
+
+
+        
     }
 }
