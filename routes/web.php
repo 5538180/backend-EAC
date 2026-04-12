@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:docente'])
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard'); // ? Deberia redireccionar al dashboard de el rol/id?
+})->middleware(['auth', 'verified'])->name('dashboard'); // ? Deberia redireccionar al dashboard de el rol/id? 
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
