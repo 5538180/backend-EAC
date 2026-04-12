@@ -153,3 +153,27 @@ Duda:
 
 Si esta es la relación correcta, ¿debería entonces el modelo EcosistemaLaboral tener una relación con Role tipo hasMany?
 
+Precaucion:
+
+En la creacion del controlador moduloController de estudiante, he intentado hacerlo yo, pero me ha resultado una inversion de tiempo muy larga, he copiado el del profe.
+
+Duda:
+
+En las relaciones del modelo Modulo, faltaba la de matriculas, si e suna relacion 1:N , en el modelo matriculas, no deberia tener tambien su relacion belongsto a Modulo?
+
+
+2.10. ✅ Verificación final de la Unidad 2:
+
+GET /modulos/1 muestra la ficha de Técnicas Básicas de Merchandising con sus RA y CE cargados desde $modulo->resultadosAprendizaje (relación directa, no a través del ecosistema).
+
+Duda:
+
+Me aparece el de Sistema informatico si pongo el 1, ya que el id de Tecnicas el 70.
+
+Fallo:
+
+Si no lo miro con la ia porque me da una key nula en peso porcentaje no hayo que el fallo era en el casteo del decimal a 2 valores.
+
+Fallo:
+
+ProgresoController para ver el progeso de los estudiantes fallaba por que al usar el metodo user_roles, ya sabia el rol del usuario, ademas la relacion no era a la tabla pivot, era  la directa 

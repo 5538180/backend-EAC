@@ -15,4 +15,11 @@ class Role extends Model
         return $this->belongsTo(EcosistemaLaboral::class,'ecosistema_laboral_id');
     }
 
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class,'user_roles');
+    }
+
+
+
 }
