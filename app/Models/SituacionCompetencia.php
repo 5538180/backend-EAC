@@ -28,15 +28,15 @@ class SituacionCompetencia extends Model
        protected $fillable = [
         'ecosistema_laboral_id', 'codigo','titulo', 'descripcion', 'umbral_maestria','nivel_complejidad','activa'
         ];
-    protected $casts = ['umbral_maestria'=>'decimal','activa'=>'boolean'];
+    protected $casts = ['umbral_maestria'=>'decimal:2','activa'=>'boolean'];
     protected $table = 'situaciones_competencia';
 
     // - RELACIONES
     public function ecosistemaLaboral(): BelongsTo{
-        return $this->belongsTo(SituacionCompetencia::class);
+        return $this->belongsTo(EcosistemaLaboral::class);
     }
 
-    public function nodoRequisito(): HasMany{
+    public function nodosRequisito(): HasMany{
         return $this->hasMany(NodoRequisito::class);
 }
 

@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\Publico;
 
+use App\Models\EcosistemaLaboral;
 use App\Models\Modulo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Illuminate\View\View;
+
 
 class EcosistemaController
 {
     /**
      * Handle the incoming request.
      */
-       public function __invoke(): \Illuminate\View\View
-    {
-        $modulos = Modulo::with([
-                'cicloFomativo.familiaProfesional',
-                'ecosistemasLaborales' => fn($q) => $q->where('activo', true),
-            ])
-            ->whereHas('ecosistemasLaborales', fn($q) => $q->where('activo', true))
-            ->take(6)->get();
+     // app/Http/Controllers/Publico/EcosistemaController.php
 
-        return view('publico.portada', compact('modulos'));
+    public function __invoke(EcosistemaLaboral $ecosistema):View
+    {
+        $ecosistema->load([
+            'modulo.cicloFormativo.familiaProfesional',
+            'situacionesCompetencia.prerequisitos',
+        ]);
+
+        return view('publico.ecosistemas.show', compact('ecosistema'));
     }
 }
