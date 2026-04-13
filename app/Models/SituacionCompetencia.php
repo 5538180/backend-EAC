@@ -68,8 +68,12 @@ class SituacionCompetencia extends Model
             'criterio_evaluacion_id'
         )->withPivot('peso_en_sc');
 }
-        public function perfilesHabilitacion(): BelongsToMany{
-        return $this->belongsToMany(PerfilHabilitacion::class);
+        public function perfilesHabilitacion(): HasMany /* BelongsToMany */{
+        return $this->hasMany(PerfilSituacion::class,'situacion_competencia_id');
+
+          /*   return $this->belongsToMany(PerfilHabilitacion::class, 'perfil_situacion')
+                ->withPivot('ecosistema_laboral_id')
+                ->withTimestamps(); */
 }
 
 }

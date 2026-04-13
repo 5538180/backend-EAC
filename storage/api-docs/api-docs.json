@@ -1,0 +1,359 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Backend EAC API",
+        "description": "Documentación OpenAPI de endpoints públicos, estudiante y docente.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://backend-eac.test",
+            "description": "Entorno local"
+        }
+    ],
+    "paths": {
+        "/v1/modulos": {
+            "get": {
+                "tags": [
+                    "Publico"
+                ],
+                "summary": "Catálogo paginado de módulos activos",
+                "operationId": "43bb0a5b840f155e632aae718d395bce",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/modulos/{modulo}": {
+            "get": {
+                "tags": [
+                    "Publico"
+                ],
+                "summary": "Detalle de módulo con RA, CE y ecosistema activo",
+                "operationId": "3ca933bee5b874d88d3f6d35ac6c4d98",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "description": "ID del módulo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                }
+            }
+        },
+        "/v1/ecosistemas/{ecosistema}": {
+            "get": {
+                "tags": [
+                    "Publico"
+                ],
+                "summary": "Detalle del ecosistema con grafo de SCs",
+                "operationId": "d52f96ce01388aa5321b1427ddf8c554",
+                "parameters": [
+                    {
+                        "name": "ecosistema",
+                        "in": "path",
+                        "description": "ID del ecosistema",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                }
+            }
+        },
+        "/v1/ecosistemas/{ecosistema}/situaciones": {
+            "get": {
+                "tags": [
+                    "Publico"
+                ],
+                "summary": "SCs del ecosistema con prerequisitos",
+                "operationId": "e097557e1c2d9d7e29ee88cc0b480fe1",
+                "parameters": [
+                    {
+                        "name": "ecosistema",
+                        "in": "path",
+                        "description": "ID del ecosistema",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                }
+            }
+        },
+        "/v1/estudiante/perfil": {
+            "get": {
+                "tags": [
+                    "Estudiante"
+                ],
+                "summary": "Lista de perfiles del estudiante autenticado",
+                "operationId": "2969881ef87d9b22e1df279404ad7723",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin rol estudiante"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/estudiante/perfil/{ecosistema}": {
+            "get": {
+                "tags": [
+                    "Estudiante"
+                ],
+                "summary": "Perfil del estudiante autenticado en un ecosistema",
+                "operationId": "19d87353e438a2247c4053adcd5680b0",
+                "parameters": [
+                    {
+                        "name": "ecosistema",
+                        "in": "path",
+                        "description": "ID del ecosistema",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin rol estudiante"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/estudiante/matriculas": {
+            "post": {
+                "tags": [
+                    "Estudiante"
+                ],
+                "summary": "Matricularse en un módulo",
+                "operationId": "8f84bfe3da0fbcce24a2b5793f2c5199",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "modulo_id"
+                                ],
+                                "properties": {
+                                    "modulo_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Matrícula creada"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin rol estudiante"
+                    },
+                    "409": {
+                        "description": "Matrícula duplicada"
+                    },
+                    "422": {
+                        "description": "Validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/docente/ecosistemas/{ecosistema}/progreso": {
+            "get": {
+                "tags": [
+                    "Docente"
+                ],
+                "summary": "Progreso del grupo",
+                "operationId": "bdf67435db3a1595ea73c2338d885f0c",
+                "parameters": [
+                    {
+                        "name": "ecosistema",
+                        "in": "path",
+                        "description": "ID del ecosistema",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin rol docente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/docente/ecosistemas/{ecosistema}/conquistas": {
+            "post": {
+                "tags": [
+                    "Docente"
+                ],
+                "summary": "Registrar conquista de SC a estudiante",
+                "operationId": "1fd30688a86b4149cc2ea0faf1c52e03",
+                "parameters": [
+                    {
+                        "name": "ecosistema",
+                        "in": "path",
+                        "description": "ID del ecosistema",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "estudiante_id",
+                                    "sc_codigo",
+                                    "gradiente_autonomia",
+                                    "puntuacion_conquista"
+                                ],
+                                "properties": {
+                                    "estudiante_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "sc_codigo": {
+                                        "type": "string",
+                                        "example": "SC-01"
+                                    },
+                                    "gradiente_autonomia": {
+                                        "type": "string",
+                                        "example": "supervisado"
+                                    },
+                                    "puntuacion_conquista": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 84.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Conquista registrada"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin rol docente"
+                    },
+                    "422": {
+                        "description": "Validación o regla de negocio"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Authorization: Bearer {token}",
+                "bearerFormat": "Token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Publico"
+        },
+        {
+            "name": "Estudiante"
+        },
+        {
+            "name": "Docente"
+        }
+    ]
+}

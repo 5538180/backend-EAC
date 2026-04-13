@@ -177,3 +177,10 @@ Si no lo miro con la ia porque me da una key nula en peso porcentaje no hayo que
 Fallo:
 
 ProgresoController para ver el progeso de los estudiantes fallaba por que al usar el metodo user_roles, ya sabia el rol del usuario, ademas la relacion no era a la tabla pivot, era  la directa 
+
+
+Unidad 3: API REST EAC
+
+Duda:
+
+No hemos blindado la entrada de inyeccion sql con CSRF
