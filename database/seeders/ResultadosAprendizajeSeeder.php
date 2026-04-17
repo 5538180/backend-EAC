@@ -39,8 +39,8 @@ class ResultadosAprendizajeSeeder extends Seeder
 
             // ? Si hay menos datos en las filas que datos en  columnas salta a la sigioente fila y no rellena
             // Ignorar filas vacías o mal formadas
-            // ! Cambiado a si es menor 
-            if (count($row) > count($header)) {
+            // ! Cambiado a si es menor Si la fila no tiene el campo tipo
+            if (count($row) < count($header)) {
                 continue;
             }
 
@@ -53,32 +53,33 @@ class ResultadosAprendizajeSeeder extends Seeder
 
             // ? si no existe la familia profesional salta a la siguiente iteracion
             $idModulo =  Modulo::where('codigo', $codModulo)->value('id');
-            if (is_null($idModulo)) {
+
+            // - Comprovacion si existe
+            /* if (is_null($idModulo)) {
                 continue;
-            }
+            } */
 
             // ! TIPO en el csv ?????
 
             $data[] = [
-                // ! id ????
-                'id' => (int)$rec['id_ra'],
-                'modulo_id' =>  $idModulo,
-                'codigo' => trim($rec['cod_modulo'] ?? ''),
-                'descripcion' => trim($rec['nombre'] ?? ''),
+             
+                'modulo_id' => (int) $idModulo, // - Casteo a int  
+                'codigo' => 'RA' . trim($rec['id_ra'] ?? ''), // - RAx    
+                'descripcion' => $rec['definicion'] ?? '',
 
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
-
+// - 5 RA3
         // ? Recorre la tabla indicada para ver que no existe duplicados en lo que queramos,
         // ? indicamos que ha de ser unico y si hay coincidencia, actualiza con los datos nuevos los demas atributos
         // Insertar/actualizar usando upsert para evitar duplicados por 'codigo'
         DB::transaction(function () use ($data) {
             foreach (array_chunk($data, 200) as $chunk) {
-                DB::table('ciclos_formativos')->upsert(
+                DB::table('resultados_aprendizaje')->upsert(
                     $chunk,
-                    ['codigo','id','modulo_id'], // ! estos ???
+                    ['codigo','modulo_id'], 
                     ['descripcion', 'updated_at']
                 );
             }

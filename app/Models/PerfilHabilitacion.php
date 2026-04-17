@@ -21,6 +21,10 @@ class PerfilHabilitacion extends Model
     {
         return $this->belongsTo(User::class, 'estudiante_id');
     }
+    public function docente(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'docente_id');
+    }
 
     public function ecosistemaLaboral(): BelongsTo
     {
