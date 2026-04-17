@@ -2,14 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\EcosistemaLaboral;
+
+use App\Models\CicloFormativo;
 use App\Models\Modulo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<EcosistemaLaboral>
+ * @extends Factory<Modulo>
  */
-class EcosistemaLaboralFactory extends Factory
+class ModuloFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,11 +21,12 @@ class EcosistemaLaboralFactory extends Factory
    
     {
         return [
-            'nombre' => $this->faker->word(),
-            'modulo_id'=> Modulo::factory(),
+            'ciclo_formativo_id'=>CicloFormativo::factory(),
+              'nombre' => $this->faker->word(),
             'codigo' => fake()->unique()->word(),
+            'horas_totales'=> fake()->numberBetween(1,600),
             'descripcion' => $this->faker->paragraph(),
-            'activo' => fake()->boolean(),
+            
         ];
     }
 }

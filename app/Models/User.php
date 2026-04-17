@@ -55,6 +55,8 @@ use  HasApiTokens;
     return $this->belongsToMany(Role::class, 'user_roles')
                 ->withPivot('ecosistema_laboral_id')
                 ->withTimestamps();
+
+   
 }
 
 
@@ -71,7 +73,7 @@ public function ecosistemasMatriculado(): BelongsToMany
     return $this->belongsToMany(
         EcosistemaLaboral::class,
         'matriculas',
-        'estudiante_id'
+        'estudiante_id',
     )->withTimestamps();
 }
 
