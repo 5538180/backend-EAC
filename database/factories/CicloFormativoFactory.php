@@ -11,21 +11,21 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CicloFormativoFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-           
-               return [
-        'familia_profesional_id' => FamiliaProfesional::factory(),
-          'nombre' => $this->faker->word(), 
-        'codigo' => fake()->unique()->word(),           
-        'grado'=>fake()->words(2),
-        'descripcion'           => $this->faker->paragraph(),
+  /**
+   * Define the model's default state.
+   *
+   * @return array<string, mixed>
+   */
+  public function definition(): array
+  {
 
-        ];
-}
+    return [
+      'familia_profesional_id' => FamiliaProfesional::factory(),
+      'nombre' => $this->faker->word(),
+      'codigo' => fake()->unique()->word(),
+      'grado' => fake()->randomElement(['GB', 'GM', 'GS', 'CE']),
+      'descripcion' => $this->faker->paragraph(),
+
+    ];
+  }
 }

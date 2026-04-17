@@ -32,7 +32,7 @@ class ModuloController extends Controller
             ->orderBy('nombre')
             ->paginate($request->integer('per_page', 12));
 
-        return new ModuloCollection($modulos);
+        return new ModuloCollection($modulos); // <- Insercion de los datos del request en en recurso
 
 
         
