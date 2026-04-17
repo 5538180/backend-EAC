@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,33 +26,56 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SituacionCompetencia extends Model
 {
+    use HasFactory;
        protected $fillable = [
         'ecosistema_laboral_id', 'codigo','titulo', 'descripcion', 'umbral_maestria','nivel_complejidad','activa'
         ];
-    protected $casts = ['umbral_maestria'=>'decimal','activa'=>'boolean'];
+    protected $casts = ['umbral_maestria'=>'decimal:2','activa'=>'boolean'];
     protected $table = 'situaciones_competencia';
 
     // - RELACIONES
     public function ecosistemaLaboral(): BelongsTo{
-        return $this->belongsTo(SituacionCompetencia::class);
+        return $this->belongsTo(EcosistemaLaboral::class);
     }
 
-    public function nodoRequisito(): HasMany{
+    public function nodosRequisito(): HasMany{
         return $this->hasMany(NodoRequisito::class);
 }
 
+ // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
     public function prerequisitos() : BelongsToMany{
-        return $this->belongsToMany(SituacionCompetencia::class);
-    }
-    public function dependientes() : BelongsToMany{
-        return $this->belongsToMany(SituacionCompetencia::class);
+        return $this->belongsToMany(
+            SituacionCompetencia::class,
+            'sc_precedencia',
+            'sc_id',
+            'sc_requisito_id'
+        );
     }
 
-      public function criterioEvaluacion(): BelongsToMany{
-        return $this->belongsToMany(CriterioEvaluacion::class);
+    // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
+    public function dependientes() : BelongsToMany{
+        return $this->belongsToMany(
+            SituacionCompetencia::class,
+            'sc_precedencia',
+            'sc_requisito_id',
+            'sc_id'
+        );
+    }
+ // ! CREAR LOOP A SI MISMO DE MUCHOS A MUCHOS
+      public function criteriosEvaluacion(): BelongsToMany{
+        return $this->belongsToMany(
+            CriterioEvaluacion::class,
+            'sc_criterios_evaluacion',
+            'situacion_competencia_id',
+            'criterio_evaluacion_id'
+        )->withPivot('peso_en_sc');
 }
-        public function perfilesHabilitacion(): BelongsToMany{
-        return $this->belongsToMany(PerfilHabilitacion::class);
+        public function perfilesHabilitacion(): HasMany /* BelongsToMany */{
+        return $this->hasMany(PerfilSituacion::class,'situacion_competencia_id');
+
+          /*   return $this->belongsToMany(PerfilHabilitacion::class, 'perfil_situacion')
+                ->withPivot('ecosistema_laboral_id')
+                ->withTimestamps(); */
 }
 
 }

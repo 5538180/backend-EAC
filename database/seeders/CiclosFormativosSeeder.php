@@ -46,19 +46,23 @@ class CiclosFormativosSeeder extends Seeder
                 continue;
             }
 
-            
+
 
             // ! tiene value erro para contener si no coincide las keys, mejor usar try catch ValueError?
             $rec = array_combine($header, $row);
 
             $codFamilia =  trim($rec['familia']);
 
+
             // ? si no existe la familia profesional salta a la siguiente iteracion
             $idFamilia =  FamiliaProfesional::where('codigo', $codFamilia)->value('id');
-            if(is_null($idFamilia)){
+
+
+            // - Controlo de si existe la familia en la BBDD
+            /* if(is_null($idFamilia)){
                 continue;
             } 
-            
+             */
 
             /*    try {
                    $data[] = [
@@ -75,12 +79,12 @@ class CiclosFormativosSeeder extends Seeder
 
 
             $data[] = [
-                       
-                'familia_profesional_id' =>  $idFamilia ,
+
+                'familia_profesional_id' =>  $idFamilia,
+                'nombre' => trim($rec['nombre'] ?? ''),
 
                 'codigo' => trim($rec['cod_ciclo'] ?? ''), // - <- UK
                 'grado' => trim($rec['nivel'] ?? ''),
-                'descripcion' => trim($rec['nombre'] ?? ''),
 
                 'created_at' => now(),
                 'updated_at' => now(),

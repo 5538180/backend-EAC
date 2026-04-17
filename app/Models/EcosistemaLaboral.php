@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EcosistemaLaboral extends Model
 {
+    use HasFactory;
         protected $fillable = [
         'modulo_id', 'nombre', 'codigo', 'descripcion', 'activo'
     ];
 
+
+
+    
     protected $table = 'ecosistemas_laborales';
 
     protected $casts = ['activo' => 'boolean'];
@@ -35,4 +40,5 @@ class EcosistemaLaboral extends Model
     {
         return $this->hasMany(PerfilHabilitacion::class);
     }
+
 }
