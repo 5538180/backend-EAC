@@ -184,3 +184,30 @@ Unidad 3: API REST EAC
 Duda:
 
 No hemos blindado la entrada de inyeccion sql con CSRF
+
+Explicacion: 
+ 
+Deber´ía implementarse para evitar que el formulario provenga de otro sitio para garantizar que ese formulario este hecho por mi mismo dominio
+
+
+// - SEMANA 4 ------ //
+
+# FALLO / DUDA :
+
+Pasando el test PublicControllersTest, fallo en campo activa , porque en el seeder digiste que tenia que ser acvivo, por que via voy, cambio el test o cambio la tabla en la BBDD?
+
+
+# Duda:
+
+En la relacion del modulo User, esta el metodo para relacionar este; pero no tiene sentido, ya que matriculas, no estudiante_id no estan en la tabla de ecosistema laboral, ademas, usuarios, como se relaciona con ecosistemaLaboral? no hay relacion directa; 
+
+public function ecosistemasMatriculado(): BelongsToMany
+{
+    return $this->belongsToMany(
+        EcosistemaLaboral::class,
+        'matriculas',
+        'estudiante_id',
+    )->withTimestamps();
+}
+
+
