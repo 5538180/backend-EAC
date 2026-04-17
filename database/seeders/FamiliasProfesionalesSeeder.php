@@ -13,7 +13,7 @@ class FamiliasProfesionalesSeeder extends Seeder
      */
     public function run(): void
 {
-    $path = database_path('seeders/csv/familias_profesionales.csv');
+    $path = database_path('seeders/csv/familias.csv');
 
     if (!file_exists($path)) {
         $this->command->error("CSV no encontrado: $path");
