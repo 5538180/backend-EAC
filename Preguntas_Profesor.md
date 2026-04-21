@@ -194,8 +194,10 @@ Deber´ía implementarse para evitar que el formulario provenga de otro sitio pa
 
 # FALLO / DUDA :
 
-Pasando el test PublicControllersTest, fallo en campo activa , porque en el seeder digiste que tenia que ser acvivo, por que via voy, cambio el test o cambio la tabla en la BBDD?
+Pasando el test PublicControllersTest, fallo en campo activa , porque en el seeder digiste que tenia que ser acvivo, por que vía voy?, cambio el test o cambio la tabla en la BBDD?
 
+/home/alumno/Documentos/laravel/backend-eac/tests/Feature/PublicControllersTest.php
+y en la base de datos 
 
 # Duda:
 
@@ -204,13 +206,13 @@ En la relacion del modulo User, esta el metodo para relacionar este; pero no tie
 public function ecosistemasMatriculado(): BelongsToMany
 {
     return $this->belongsToMany(
-        EcosistemaLaboral::class,
+        ecosistemaLaboral::class,
         'matriculas',
         'estudiante_id',
     )->withTimestamps();
 }
 
-Pregunta:
+# Pregunta:
 
 Tabla resultados de aprendizaje no tiene el atributo peso porcentaje. En el mermaind aparece el atributo, pero en el modelo no. 
 Mas tarde en el curl publico 3ro lo pide ya que se hace en ModuloResource
@@ -226,3 +228,9 @@ Mas tarde en el curl publico 3ro lo pide ya que se hace en ModuloResource
 
       Reparacion:
       Cambiar migracion, anadir atributo, hacer un php artisan migrate refresh ; despues añadirla al modelo en el fillable etc
+
+#Duda:
+
+4.4.3. Nuevo controlador del módulo del estudiante pide crear un nuevo controlador, pero en 2.11. Soluciones ya decias que habia que tenerlo
+4.4.4. Rutas de módulos de estudiante ya estaban tambien
+

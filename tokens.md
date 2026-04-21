@@ -75,13 +75,55 @@ $token = $user->createToken('test')->plainTextToken;
 curl -s http://backend-eac.test/api/v1/docente/ecosistemas/1/progreso \
   -H "Authorization: Bearer 2|atz8jurgVehI1CLYBAadSrCvrLfNfHnnccZK74nzd4bb141e" | jq .
 
-# Registrar conquista de SC-01 al estudiante 2
+# 4.5. Verificación con curl
+
+## Estado inicial del estudiante (sin conquistas)
+curl -s http://backend-eac.test/api/v1/estudiante/perfil/1/zdp \
+  -H "Authorization: Bearer 1|lwulsVkHJrNe8fpsgOqYWlB4ypWrT8yMk7VxOxQI5d1d4e73" | jq .
+
+## Respuesta esperada:
+## - zdp: [SC-01, SC-02]   ← sin prerequisitos, accesibles
+## - bloqueadas: [SC-03]   ← requiere SC-01 y SC-02
+## - recomendacion: SC-01  ← menor complejidad
+## - completado: false
+
+
+# Simular conquista de SC-01 (como docente) y volver a consultar la ZDP
 curl -s -X POST http://backend-eac.test/api/v1/docente/ecosistemas/1/conquistas \
   -H "Authorization: Bearer 2|atz8jurgVehI1CLYBAadSrCvrLfNfHnnccZK74nzd4bb141e" \
   -H "Content-Type: application/json" \
-  -d '{
-        "estudiante_id": 2,
-        "sc_codigo": "SC-01",
-        "gradiente_autonomia": "supervisado",
-        "puntuacion_conquista": 84.5
-      }' | jq .
+  -d '{"estudiante_id":2,"sc_codigo":"SC-01","gradiente_autonomia":"supervisado","puntuacion_conquista":84.5}'
+
+curl -s http://backend-eac.test/api/v1/estudiante/perfil/1/zdp \
+  -H "Authorization: Bearer 1|lwulsVkHJrNe8fpsgOqYWlB4ypWrT8yMk7VxOxQI5d1d4e73" | jq '{
+      zdp: [.data.zdp[].codigo],
+      bloqueadas: [.data.bloqueadas[].codigo],
+      recomendacion: .data.recomendacion.codigo
+  }'
+
+# Respuesta esperada:
+# {
+#   "zdp": ["SC-02"],
+#   "bloqueadas": ["SC-03"],
+#   "recomendacion": "SC-02"
+# }
+
+# Conquistar SC-02 y verificar que SC-03 pasa a la ZDP
+curl -s -X POST http://backend-eac.test/api/v1/docente/ecosistemas/1/conquistas \
+  -H "Authorization: Bearer 2|atz8jurgVehI1CLYBAadSrCvrLfNfHnnccZK74nzd4bb141e" \
+  -H "Content-Type: application/json" \
+  -d '{"estudiante_id":2,"sc_codigo":"SC-02","gradiente_autonomia":"autonomo","puntuacion_conquista":91.0}'
+
+curl -s http://backend-eac.test/api/v1/estudiante/perfil/1/zdp \
+  -H "Authorization: Bearer 1|lwulsVkHJrNe8fpsgOqYWlB4ypWrT8yMk7VxOxQI5d1d4e73" | jq '{
+      zdp: [.data.zdp[].codigo],
+      bloqueadas: [.data.bloqueadas[].codigo],
+      completado: .data.completado
+  }'
+
+# Respuesta esperada:
+# {
+#   "zdp": ["SC-03"],
+#   "bloqueadas": [],
+#   "completado": false
+# }

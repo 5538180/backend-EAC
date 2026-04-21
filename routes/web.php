@@ -14,7 +14,7 @@ Route::get('/', PortadaController::class)
     ->name('publico.portada');
 
 Route::prefix('modulos')->name('publico.modulos.')->group(function () {
-    Route::get('/',         [ModuloController::class, 'index'])->name('index');
+    Route::get('/', [ModuloController::class, 'index'])->name('index');
     Route::get('/{modulo}', [ModuloController::class, 'show'])->name('show');
 });
 
@@ -26,9 +26,11 @@ Route::middleware(['auth', 'role:estudiante'])
     ->prefix('estudiante')
     ->name('estudiante.')
     ->group(function () {
-        Route::get('/dashboard',          Estudiante\DashboardController::class)->name('dashboard');
-        Route::get('/perfil/{perfil}',    Estudiante\PerfilController::class)->name('perfil.show');
-        Route::get('/modulos', Estudiante\ModuloController::class)->name('modulos.index');
+        Route::get('/dashboard', Estudiante\DashboardController::class)->name('dashboard');
+        Route::get('/perfil/{perfil}', Estudiante\PerfilController::class)->name('perfil.show');
+
+        Route::get('/modulos', [Estudiante\ModuloController::class, 'index'])->name('modulos.index');
+        Route::get('/modulos/{modulo}', [Estudiante\ModuloController::class, 'show'])->name('modulo');
     });
 
 // ─── Rutas del docente ────────────────────────────────────────────────────────
@@ -36,9 +38,9 @@ Route::middleware(['auth', 'role:docente'])
     ->prefix('docente')
     ->name('docente.')
     ->group(function () {
-        Route::get('/dashboard',                Docente\DashboardController::class)->name('dashboard');
+        Route::get('/dashboard', Docente\DashboardController::class)->name('dashboard');
         Route::get('/ecosistemas/{ecosistema}', Docente\EcosistemaController::class)->name('ecosistemas.show');
-        Route::get('/progreso/{ecosistema}',    Docente\ProgresoController::class)->name('progreso.show');
+        Route::get('/progreso/{ecosistema}', Docente\ProgresoController::class)->name('progreso.show');
     });
 
 // Rutas de autenticación (generadas por Breeze)
@@ -56,5 +58,5 @@ Route::middleware('auth')->group(function () {
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 ?>

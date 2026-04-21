@@ -12,12 +12,12 @@ use App\Http\Controllers\Api\V1;
 Route::prefix('v1')->name('api.v1.')->group(function () {
 
     // ── Públicos ────────────────────────────────────────────────────────────────
-    Route::get('modulos',         [V1\ModuloController::class, 'index'])->name('modulos.index');
+    Route::get('modulos', [V1\ModuloController::class, 'index'])->name('modulos.index');
     Route::get('modulos/{modulo}', [V1\ModuloController::class, 'show'])->name('modulos.show');
 
-    Route::get('ecosistemas/{ecosistema}',              [V1\EcosistemaController::class, 'show'])
+    Route::get('ecosistemas/{ecosistema}', [V1\EcosistemaController::class, 'show'])
         ->name('ecosistemas.show');
-    Route::get('ecosistemas/{ecosistema}/situaciones',  [V1\EcosistemaController::class, 'situaciones'])
+    Route::get('ecosistemas/{ecosistema}/situaciones', [V1\EcosistemaController::class, 'situaciones'])
         ->name('ecosistemas.situaciones');
 
     // ── Autenticados (Sanctum) ───────────────────────────────────────────────────
@@ -25,20 +25,29 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         // Estudiante
         Route::prefix('estudiante')->name('estudiante.')->group(function () {
-            Route::get('perfil',                [V1\Estudiante\PerfilController::class, 'index'])
+            Route::get('perfil', [V1\Estudiante\PerfilController::class, 'index'])
                 ->name('perfil.index');
-            Route::get('perfil/{ecosistema}',   [V1\Estudiante\PerfilController::class, 'show'])
+
+            Route::get('perfil/{ecosistema}', [V1\Estudiante\PerfilController::class, 'show'])
                 ->name('perfil.show');
-            Route::post('matriculas',           V1\Estudiante\MatriculaController::class)
+
+            Route::get('perfil/{ecosistema}/zdp', V1\Estudiante\ZdpController::class)
+                ->name('zdp');
+                
+            Route::post('matriculas', V1\Estudiante\MatriculaController::class)
                 ->name('matriculas.store');
         });
 
         // Docente
         Route::prefix('docente')->name('docente.')->group(function () {
-            Route::get('ecosistemas/{ecosistema}/progreso',
-                V1\Docente\ProgresoController::class)->name('progreso');
-            Route::post('ecosistemas/{ecosistema}/conquistas',
-                V1\Docente\ConquistaController::class)->name('conquistas');
+            Route::get(
+                'ecosistemas/{ecosistema}/progreso',
+                V1\Docente\ProgresoController::class
+            )->name('progreso');
+            Route::post(
+                'ecosistemas/{ecosistema}/conquistas',
+                V1\Docente\ConquistaController::class
+            )->name('conquistas');
         });
     });
 });

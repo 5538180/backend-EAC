@@ -185,7 +185,7 @@ class GrafoService
 
         foreach ($scs as $sc) {
             foreach ($sc->prerequisitos as $pre) {
-                $gradoEntrada[$sc->id]++;
+                $gradoEntrada->put($sc->id, $gradoEntrada->get($sc->id, 0) + 1);
             }
         }
 
@@ -199,8 +199,10 @@ class GrafoService
 
             // Reducir grado de entrada de los dependientes
             foreach ($scs[$id]->dependientes ?? [] as $dep) {
-                $gradoEntrada[$dep->id]--;
-                if ($gradoEntrada[$dep->id] === 0) {
+                $gradoEntrada->put($dep->id, $gradoEntrada->get($dep->id, 0) - 1);
+                $nuevoGrado = $gradoEntrada->get($dep->id);
+
+                if ($nuevoGrado === 0) {
                     $cola[] = $dep->id;
                 }
             }
