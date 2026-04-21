@@ -113,7 +113,7 @@ class PublicControllersTest extends TestCase
             $json->has('data', 3)
                 ->has('data.0', fn (AssertableJson $json) =>
                     $json->hasAll(['id', 'codigo', 'titulo', 'descripcion', 'umbral_maestria', 'nivel_complejidad'])
-                    ->where('activa', true)
+                    ->where('activa', true) 
                     ->etc()
                 )
                 ->etc()

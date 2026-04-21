@@ -192,16 +192,13 @@ Deber´ía implementarse para evitar que el formulario provenga de otro sitio pa
 
 // - SEMANA 4 ------ //
 
-# FALLO / DUDA :
 
-Pasando el test PublicControllersTest, fallo en campo activa , porque en el seeder digiste que tenia que ser acvivo, por que vía voy?, cambio el test o cambio la tabla en la BBDD?
-
-/home/alumno/Documentos/laravel/backend-eac/tests/Feature/PublicControllersTest.php
-y en la base de datos 
 
 # Duda:
 
-En la relacion del modulo User, esta el metodo para relacionar este; pero no tiene sentido, ya que matriculas, no estudiante_id no estan en la tabla de ecosistema laboral, ademas, usuarios, como se relaciona con ecosistemaLaboral? no hay relacion directa; 
+En la relacion del modulo User, esta el metodo para relacionar este; pero no tiene sentido, ya que matriculas, estudiante_id no estan en la tabla de ecosistema laboral, ademas, usuarios, como se relaciona con ecosistemaLaboral? no hay relacion directa; 
+
+Si lo que uqeremos es sacar la relacion de ecosistemas_laborales, matriculas y estudiante, ecosistemas laborales no tiene los atributos que se especifican en el metodo. Se que no se usa actualemte, pero entonces para que esta? Ademas para que poner una huella de tiempo?
 
 public function ecosistemasMatriculado(): BelongsToMany
 {
@@ -212,10 +209,34 @@ public function ecosistemasMatriculado(): BelongsToMany
     )->withTimestamps();
 }
 
+
+
 # Pregunta:
 
-Tabla resultados de aprendizaje no tiene el atributo peso porcentaje. En el mermaind aparece el atributo, pero en el modelo no. 
-Mas tarde en el curl publico 3ro lo pide ya que se hace en ModuloResource
+Tabla resultados de aprendizaje no tiene el atributo peso porcentaje.
+
+En el mermaind aparece el atributo, pero no esta ni en el modelo ni en la migracion.
+
+Mas tarde en el primer curl publico  lo pide ya que se hace en ModuloResource
+
+MODULO_RESOURCE
+       // RA del módulo (trazabilidad curricular)
+            'resultados_aprendizaje' => $this->whenLoaded('resultadosAprendizaje', function () {
+                return $this->resultadosAprendizaje->map(fn($ra) => [
+                    'id'               => $ra->id,
+                    'codigo'           => $ra->codigo,
+                    'descripcion'      => $ra->descripcion,
+                    'peso_porcentaje'  => $ra->peso_porcentaje,
+                ]);
+            }),
+
+
+3.7.1 Verificación con curl
+# Catálogo de módulos
+curl -s http://backend-eac.test/api/v1/modulos | jq .
+
+
+SALIDA DE LA PETICION
 "ecosistema_activo": null,
     "resultados_aprendizaje": [
       {
@@ -224,13 +245,98 @@ Mas tarde en el curl publico 3ro lo pide ya que se hace en ModuloResource
         "descripcion": "Evalúa sistemas informáticos, identificando sus componentes y características.",
         "peso_porcentaje": null
       },
-      si que aparece y lo da nulo ademas del ecosistema activo tambien nulo.
+Ademas ecosistema activo tambien sale nulo, no deberia de ser un boleano?
 
-      Reparacion:
-      Cambiar migracion, anadir atributo, hacer un php artisan migrate refresh ; despues añadirla al modelo en el fillable etc
+Reparacion:
+      Cambiar migracion, anadir atributo, hacer un php artisan migrate refresh ; despues añadirla al modelo en el fillable etc????
 
 #Duda:
 
 4.4.3. Nuevo controlador del módulo del estudiante pide crear un nuevo controlador, pero en 2.11. Soluciones ya decias que habia que tenerlo
-4.4.4. Rutas de módulos de estudiante ya estaban tambien
 
+
+
+DUDA:
+Unidad 4: Motor de navegación: ZDP y recomendación
+
+Unidad 5: Evaluación y Huella de Talento
+4.5 correcion de errores
+
+FALLO:
+
+Si no es por ia no lo saco ni para atras que faltaban los put y los get 188 y 202 en mi caso
+
+   /**
+    /**
+     * Ordenación topológica del grafo (algoritmo de Kahn).
+     * Ordenación topológica del grafo (algoritmo de Kahn).
+     * Devuelve las SCs en un orden de estudio válido (prerequisitos antes que dependientes).
+     * Devuelve las SCs en un orden de estudio válido (prerequisitos antes que dependientes).
+     *
+     *
+     * @param  EcosistemaLaboral  $ecosistema
+     * @param  EcosistemaLaboral  $ecosistema
+     * @return Collection<SituacionCompetencia>   SCs ordenadas
+     * @return Collection<SituacionCompetencia>   SCs ordenadas
+     * @throws \RuntimeException si el grafo tiene ciclos
+     * @throws \RuntimeException si el grafo tiene ciclos
+     */
+     */
+    public function ordenTopologico(EcosistemaLaboral $ecosistema): Collection
+    public function ordenTopologico(EcosistemaLaboral $ecosistema): Collection
+    {
+    {
+        $scs = $ecosistema->situacionesCompetencia()
+        $scs = $ecosistema->situacionesCompetencia()
+            ->with('prerequisitos:id,codigo')
+            ->with('prerequisitos:id,codigo')
+            ->get()
+            ->get()
+            ->keyBy('id');
+            ->keyBy('id');
+        // Calcular grado de entrada de cada nodo
+        // Calcular grado de entrada de cada nodo
+        $gradoEntrada = $scs->mapWithKeys(fn($sc) => [$sc->id => 0]);
+        $gradoEntrada = $scs->mapWithKeys(fn($sc) => [$sc->id => 0]);
+        foreach ($scs as $sc) {
+        foreach ($scs as $sc) {
+            foreach ($sc->prerequisitos as $pre) {
+            foreach ($sc->prerequisitos as $pre) {
+                $gradoEntrada->put($sc->id, $gradoEntrada->get($sc->id, 0) + 1); // faltaba put
+                $gradoEntrada[$sc->id]++;
+            }
+            }
+        }
+        }
+        // Cola inicial: SCs sin prerequisitos
+        // Cola inicial: SCs sin prerequisitos
+        $cola      = $gradoEntrada->filter(fn($grado) => $grado === 0)->keys()->toArray();
+        $cola      = $gradoEntrada->filter(fn($grado) => $grado === 0)->keys()->toArray();
+        $resultado = collect();
+        $resultado = collect();
+        while (!empty($cola)) {
+        while (!empty($cola)) {
+            $id = array_shift($cola);
+            $id = array_shift($cola);
+            $resultado->push($scs[$id]);
+            $resultado->push($scs[$id]);
+            // Reducir grado de entrada de los dependientes
+            // Reducir grado de entrada de los dependientes
+            foreach ($scs[$id]->dependientes ?? [] as $dep) {
+            foreach ($scs[$id]->dependientes ?? [] as $dep) {
+                $gradoEntrada->put($dep->id, $gradoEntrada->get($dep->id, 0) - 1);
+                $nuevoGrado = $gradoEntrada->get($dep->id); // faltaban los get
+                $gradoEntrada[$dep->id]--;
+                if ($nuevoGrado === 0) {
+                if ($gradoEntrada[$dep->id] === 0) {
+                    $cola[] = $dep->id;
+                    $cola[] = $dep->id;
+                }
+                }
+            }
+            }
+        }
+        }
+Duda:
+
+Partials y Componentes
