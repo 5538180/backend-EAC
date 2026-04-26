@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EcosistemaLaboral;
 use App\Models\PerfilHabilitacion;
 use App\Models\SituacionCompetencia;
+use App\Services\CalificacionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ use Illuminate\Validation\Rule;
 
 class ConquistaController extends Controller
 {
+    public function __construct(
+        private readonly CalificacionService $calificacionService,
+    ) {}
+
     /**
      * POST /api/v1/docente/ecosistemas/{ecosistema}/conquistas
      *
@@ -86,13 +91,10 @@ class ConquistaController extends Controller
                 ]);
             }
 
-            // Recalcular calificación actual del perfil
-            // (lógica completa en Unidad 7; aquí usamos media ponderada simple)
-            $nuevaCalificacion = $perfil->situacionesConquistadas()
-                ->avg('perfil_situacion.puntuacion_conquista');
-
-            $perfil->update(['calificacion_actual' => round($nuevaCalificacion, 2)]);
+            $this->calificacionService->calcularYPersistir($perfil->fresh());
         });
+
+        $perfil->refresh();
 
         return response()->json([
             'data' => [
@@ -100,6 +102,7 @@ class ConquistaController extends Controller
                 'sc_codigo'              => $sc->codigo,
                 'gradiente_autonomia'    => $data['gradiente_autonomia'],
                 'puntuacion_conquista'   => $data['puntuacion_conquista'],
+                'calificacion_actual'    => (float) $perfil->calificacion_actual,
                 'mensaje'                => "SC {$sc->codigo} registrada correctamente.",
             ],
             'meta' => [

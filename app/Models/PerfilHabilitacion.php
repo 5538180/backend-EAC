@@ -39,7 +39,7 @@ class PerfilHabilitacion extends Model
             'perfil_situacion',
             'perfil_habilitacion_id',
             'situacion_competencia_id'
-        )->withPivot([
+        )->using(PerfilSituacion::class)->withPivot([
             'gradiente_autonomia',
             'puntuacion_conquista',
             'intentos',

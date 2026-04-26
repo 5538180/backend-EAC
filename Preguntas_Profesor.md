@@ -255,7 +255,6 @@ Reparacion:
 4.4.3. Nuevo controlador del módulo del estudiante pide crear un nuevo controlador, pero en 2.11. Soluciones ya decias que habia que tenerlo
 
 
-
 DUDA:
 Unidad 4: Motor de navegación: ZDP y recomendación
 
@@ -304,8 +303,7 @@ Si no es por ia no lo saco ni para atras que faltaban los put y los get 188 y 20
             foreach ($sc->prerequisitos as $pre) {
                 $gradoEntrada->put($sc->id, $gradoEntrada->get($sc->id, 0) + 1); // faltaba put
                 $gradoEntrada[$sc->id]++;
-            }
-            }
+    
         }
         }
         // Cola inicial: SCs sin prerequisitos
@@ -340,3 +338,11 @@ Si no es por ia no lo saco ni para atras que faltaban los put y los get 188 y 20
 Duda:
 
 Partials y Componentes
+
+partials cuando hay demasiadocodigo
+
+
+// - ---------------------- SEMANA 5 ---------------------- //
+
+
+

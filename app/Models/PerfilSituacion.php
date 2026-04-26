@@ -16,7 +16,7 @@ class PerfilSituacion extends Pivot
     ];
 
     protected $casts = [
-        'gradiente_autonomia' => 'decimal:2',
+        'gradiente_autonomia' => 'string',
         'puntuacion_conquista' => 'decimal:2',
         'fecha_conquista' => 'datetime',
     ];
