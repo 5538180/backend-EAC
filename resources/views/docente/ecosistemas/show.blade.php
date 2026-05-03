@@ -4,8 +4,8 @@
 @section('title', 'Ecosistema · ' . $ecosistema->modulo->nombre)
 
 @section('content')
-// * REVISAR RUTA APARTADO 2.6.2 ---------------------------------
-{{-- resources/views/docente/ecosistemas/show.blade.php --}}
+    // * REVISAR RUTA APARTADO 2.6.2 ---------------------------------
+    {{-- resources/views/docente/ecosistemas/show.blade.php --}}
     {{-- Breadcrumb --}}
     <nav class="text-sm text-gray-500 mb-6">
         <a href="{{ route('docente.dashboard') }}" class="hover:text-gray-700">Panel docente</a>
@@ -34,6 +34,16 @@
                     <p class="text-3xl font-bold">{{ $totalEstudiantes }}</p>
                     <p class="text-xs text-gray-400">Estudiantes</p>
                 </div>
+
+                {{-- * Anadido en Tema 6 .7.1  lo envuelto en un div para el espaciado de los gap--}}
+                <div>
+                    {{-- dentro de la cabecera del ecosistema --}}
+                    <a href="{{ route('docente.ecosistemas.analytics', $ecosistema) }}"
+                        class="btn btn-outline-primary btn-sm">
+                        📊 Ver analítica
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
@@ -46,17 +56,23 @@
             <section>
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold text-gray-900">Situaciones de Competencia</h2>
-                    <a href="{{ route('docente.progreso.show', $ecosistema) }}"
-                       class="text-sm text-eac-500 hover:text-eac-700 underline">
-                        Ver progreso del grupo →
-                    </a>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('docente.ecosistemas.analytics', $ecosistema) }}"
+                            class="text-sm text-eac-500 hover:text-eac-700 underline">
+                            Ver analitica
+                        </a>
+                        <a href="{{ route('docente.progreso.show', $ecosistema) }}"
+                            class="text-sm text-eac-500 hover:text-eac-700 underline">
+                            Ver progreso del grupo →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-3">
                     @foreach($ecosistema->situacionesCompetencia->sortBy('nivel_complejidad') as $sc)
                         @php
                             $conquistadas = $conquistasPorSc[$sc->codigo] ?? 0;
-                            $porcentaje   = $totalEstudiantes > 0
+                            $porcentaje = $totalEstudiantes > 0
                                 ? round(($conquistadas / $totalEstudiantes) * 100)
                                 : 0;
                         @endphp
@@ -74,7 +90,8 @@
                                 {{-- Nivel de complejidad --}}
                                 <div class="flex gap-0.5 flex-shrink-0">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <span class="w-1.5 h-1.5 rounded-full {{ $i <= $sc->nivel_complejidad ? 'bg-eac-500' : 'bg-gray-200' }}"></span>
+                                        <span
+                                            class="w-1.5 h-1.5 rounded-full {{ $i <= $sc->nivel_complejidad ? 'bg-eac-500' : 'bg-gray-200' }}"></span>
                                     @endfor
                                 </div>
                             </div>
@@ -89,7 +106,7 @@
                                     </div>
                                     <div class="w-full bg-gray-100 rounded-full h-1.5">
                                         <div class="bg-eac-500 h-1.5 rounded-full transition-all"
-                                             style="width: {{ $porcentaje }}%"></div> 
+                                            style="width: {{ $porcentaje }}%"></div>
                                     </div>
                                 </div>
 
@@ -99,7 +116,7 @@
                                         <span class="text-xs text-gray-400">Requiere:</span>
                                         @foreach($sc->prerequisitos as $pre)
                                             <span class="font-mono text-xs bg-yellow-50 border border-yellow-200
-                                                         text-yellow-700 px-2 py-0.5 rounded">
+                                                                                         text-yellow-700 px-2 py-0.5 rounded">
                                                 {{ $pre->codigo }}
                                             </span>
                                         @endforeach
@@ -112,8 +129,8 @@
                                         <span class="text-xs text-gray-400">CE cubiertos:</span>
                                         @foreach($sc->criteriosEvaluacion as $ce)
                                             <span class="font-mono text-xs bg-blue-50 border border-blue-100
-                                                         text-blue-600 px-2 py-0.5 rounded"
-                                                  title="{{ $ce->descripcion }}">
+                                                                                         text-blue-600 px-2 py-0.5 rounded"
+                                                title="{{ $ce->descripcion }}">
                                                 {{ $ce->codigo }}
                                                 <span class="opacity-60">({{ $ce->pivot->peso_en_sc }}%)</span>
                                             </span>
@@ -139,8 +156,7 @@
                             <span class="font-mono text-xs bg-eac-900 text-white px-2 py-0.5 rounded">
                                 {{ $ra->codigo }}
                             </span>
-                            <span class="text-xs font-medium text-gray-700 line-clamp-1"
-                                  title="{{ $ra->descripcion }}">
+                            <span class="text-xs font-medium text-gray-700 line-clamp-1" title="{{ $ra->descripcion }}">
                                 {{ Str::limit($ra->descripcion, 40) }}
                             </span>
                         </div>

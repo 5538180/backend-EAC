@@ -8,7 +8,7 @@ use App\Models\SituacionCompetencia;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class GrafoService
+class  GrafoService 
 {
     /**
      * Calcula la Zona de Despliegue Proximal del estudiante.

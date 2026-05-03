@@ -28,7 +28,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+
+        /* * Cambiado la redireccion cuando loguee vaya a el dashboard de docente, no del index
+        ! habria que comprobar si es necesario ver el usuario para que la ruta hacia el dashboard
+        ! sea dinamica en fucnion del usuario logueda */
+
+ /*        $usuarioLogueado = $request->user()->name;
+        return redirect()->intended(route('$usuarioLogueado.dashboard', absolute: false)); */
+        return redirect()->intended(route(/* $request->user()->rol(). */'dashboard', absolute: false)); 
     }
 
     /**
