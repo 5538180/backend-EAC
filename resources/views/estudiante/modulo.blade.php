@@ -25,10 +25,31 @@
                 </p>
             @endif
         </div>
-        <a href="{{ route('publico.modulos.show', $modulo) }}"
-           class="text-sm text-gray-400 hover:text-gray-600 underline">
-            Ver detalle del módulo
-        </a>
+        <div class="flex items-center gap-3">
+            @if($perfil)
+
+                {{-- * Anadido en 6.7.2 entendidendo susstituyendo a el de abajo  --}}
+            {{-- dentro del panel de progreso del estudiante --}}
+                <a href="{{ route('estudiante.huella-radar', $perfil->ecosistemaLaboral) }}"
+                 class="btn btn-outline-indigo btn-sm">
+                  🎯 Ver mi Huella de Talento
+                </a>
+
+
+
+                <{{-- a href="{{ route('estudiante.huella-radar', $ecosistema) }}"
+                   class="text-sm text-vfds-primary hover:text-vfds-primary/80 underline">
+                    Ver Huella de Talento
+                </a> --}}
+
+
+
+            @endif
+            <a href="{{ route('publico.modulos.show', $modulo) }}"
+               class="text-sm text-gray-400 hover:text-gray-600 underline">
+                Ver detalle del módulo
+            </a>
+        </div>
     </div>
 
     {{-- Baner de recomendación (solo si la ZDP no está vacía) --}}

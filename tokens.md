@@ -127,3 +127,21 @@ curl -s http://backend-eac.test/api/v1/estudiante/perfil/1/zdp \
 #   "bloqueadas": [],
 #   "completado": false
 # }
+
+
+# Verifica la ruta del docente
+curl -s http://backend-eac.test/docente/ecosistemas/1/analytics \
+     -H "Cookie: XSRF-TOKEN=eyJpdiI6IlN2M25DZTMxOHZHY2ZocmhWZ2xzblE9PSIsInZhbHVlIjoieUc3dlRxRDgwL0Uva0xXN0NVWnRkUUw3WmxITmZrbFpzL0FBWiswZUxtc21pNVE1ZkVRMlBqS2NBMFNqWEh6dkVVZHJ0NXlia1UyeXp6cnkyWkh1RjRXQ0ZOTXlVV1h6TTlYbzhCR0NZRUJCMVBKcHpuN2k3bGg2S1ZEdHR4QXkiLCJtYWMiOiJkMWU2Yzg1MzQ0NjE3N2UxZDIyZTlhYTA5OTliZTJkYjk2Mjc3ZGZmYmI4YmNlNTM2YzNlODYxMjAwOTE5ZTBjIiwidGFnIjoiIn0%3D;backend-eac-session=eyJpdiI6IkQ0MEx5Yjl0WDVNdTl0ZXR4TzFSdGc9PSIsInZhbHVlIjoiODNna3FLTkxucEdLS2JtU3FFQ1Y2VXdvMGlDK1ZDVldSSG5ydnJVNXVQOUM3RW5seCticVBTdkw3WG83NzB3UGM5emJheml6Y0dFcnJrM1UvSEZhb2NpQTJhZFRIeTM2VUF6cG8vaXdnQWNPTTNOcXRob3pOUXBtaGc2RlF4aHYiLCJtYWMiOiJjZjU4ZmFkOWFlZTcxNDdmZmEyZjlmMjU0NDRkNDVhZDNkNmExMDMwZGI3MjMxNjk2MTA5MThkZDQwMzI2NmNlIiwidGFnIjoiIn0%3D"
+# Debe devolver HTML con tres <canvas> y tres bloques <script>
+
+     <div class="card-body">
+                    <canvas style="display: none;" id="zkbxsypcjegomntrliwdhqavu"  height='400' ></canvas>
+<div id="zkbxsypcjegomntrliwdhqavu_loader" style="
+    display: flex;
+    justify-content: center;
+    opacity: 1;
+    align-items: center;
+
+
+
+    

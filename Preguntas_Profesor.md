@@ -344,5 +344,62 @@ partials cuando hay demasiadocodigo
 
 // - ---------------------- SEMANA 5 ---------------------- //
 
+// ? -Aplicacion de nuevos metodo:
+
+1 : FK en migracioan
+    Antes : 
+    $table->foreign('ciclo_id')->references('id')->on('ciclos')->onDelete('cascade');
+    Ahora:
+    $table->foreignId('familia_profesional_id')->constrained('familias_profesionales')->cascadeOnDelete();
+
+2  : Rutas
+    Antes :
+
+    Route::middleware(['auth', 'role:estudiante'])
+    ->prefix('estudiante')
+    ->name('estudiante.')
+    ->group(function () {
+        Route::get('/dashboard', Estudiante\DashboardController::class)->name('dashboard');
+        Route::get('/perfil/{perfil}', Estudiante\PerfilController::class)->name('perfil.show');
+        Route::get('/perfil/{ecosistema}/huella-radar', Estudiante\HuellaRadarController::class)
+            ->name('huella-radar');
+
+        Route::get('/modulos', [Estudiante\ModuloController::class, 'index'])->name('modulos.index');
+        Route::get('/modulos/{modulo}', [Estudiante\ModuloController::class, 'show'])->name('modulo');
+    });
+
+    Los enlacen van por el alias (name)
+    Ahora:
+
+    Route::resource('equipo', EquipoController::class);
+
+    Y los enlaces van por equipo.<metodos del controlador>
 
 
+// ? Metodos COntrolador;
+    - 1 Create es solo vista y store espara ejecutar el guardado?
+    -2 Lo mimsmo con edit y update? 
+    - 3 destory no tiene lo mismo? formulario en el mismo boton?
+
+// ? 4   : Update un objeto
+    - Para hacer el metodo update? como se hace exactamente? 
+    Sin el request_>validate? 
+    hay que tenerlo como se implemeta?
+    hay que poner los cast en los modelos?
+     modelo:
+        protected $casts = [
+        'gradiente_autonomia' => 'string',
+        'puntuacion_conquista' => 'decimal:2',
+        'fecha_conquista' => 'datetime',
+    ];
+    o en  controlador?
+     $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'url_logo' => 'nullable|string|max:255',
+        'region' => 'required|string|max:255',
+    ]);
+     $equipo->update($validate);
+// - TEMA 6
+
+com opuedo redireccionar un avez me he logueado revisando quien ha sido y que  la redireccion ñla haga dinamica??
+app/Http/Controllers/Auth/AuthenticatedSessionController.php
